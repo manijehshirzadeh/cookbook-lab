@@ -7,6 +7,9 @@ const methodOverride = require("method-override");
 const morgan = require("morgan");
 const session = require("express-session");
 
+const ensureLoggedIn = require("./middleware/ensureLoggedIn");
+const passGlobalDataToViews = require("./middleware/passGlobalDataToViews");
+
 const authController = require("./controllers/auth.js");
 const recipesController = require("./controllers/recipes.js");
 const ingredientsController = require("./controllers/ingredients.js");
@@ -30,7 +33,9 @@ app.use(
   })
 );
 
+app.use(passGlobalDataToViews);
 app.use("/auth", authController);
+app.use(ensureLoggedIn);
 app.use("/recipes", recipesController);
 app.use("/ingredients", ingredientsController);
 
