@@ -4,6 +4,19 @@ const router = express.Router();
 const User = require("../models/user.js");
 const Recipe = require("../models/recipe.js");
 
+router.get("/:id", async (req, res) => {
+  try {
+    const recipe = await Recipe.findById(req.params.id).populate("owner");
+
+    res.render("recipes/show.ejs", {
+      recipe: recipe,
+    });
+  } catch (error) {
+    console.log(error);
+    res.redirect("/recipes");
+  }
+});
+
 router.get("/", async (req, res) => {
   try {
     const recipes = await Recipe.find({}).populate("owner");
