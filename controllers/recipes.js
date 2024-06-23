@@ -4,6 +4,10 @@ const router = express.Router();
 const User = require("../models/user.js");
 const Recipe = require("../models/recipe.js");
 
+router.get("/new", async (req, res) => {
+  res.render("recipes/new.ejs");
+});
+
 router.get("/:id", async (req, res) => {
   try {
     const recipe = await Recipe.findById(req.params.id).populate("owner");
@@ -27,16 +31,25 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.get("/new", async (req, res) => {
-  res.render("recipes/new.ejs");
-});
-
 router.post("/", async (req, res) => {
   try {
     const newRecipe = new Recipe(req.body);
     newRecipe.owner = req.session.user._id;
     await newRecipe.save();
     res.redirect("/recipes");
+  } catch (error) {
+    console.log(error);
+    res.redirect("/");
+  }
+});
+
+router.delete("/:id", async (req, res) => {
+  try {
+    const recipe = await Recipe.findById(req.params.id);
+    if (recipe.owner.equals(req.session.user._id)) {
+      await recipe.deleteOne();
+      res.redirect("/recipes");
+    }
   } catch (error) {
     console.log(error);
     res.redirect("/");
