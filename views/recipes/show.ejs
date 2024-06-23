@@ -15,7 +15,7 @@
     <h2>Owner:</h2>
     <p><%= recipe.owner.username %></p>
 
-    <a href="/recipes/<%= recipe._id %>/edit">Edit recipe</a>
+    <a href="/recipes/<%= recipe._id %>/edit"><button>Edit Recipe</button></a>
     <form action="/recipes/<%= recipe._id %>?_method=DELETE" method="post">
       <button>Delete recipe</button>
     </form>

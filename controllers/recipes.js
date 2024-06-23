@@ -43,6 +43,31 @@ router.post("/", async (req, res) => {
   }
 });
 
+router.get("/:id/edit", async (req, res) => {
+  try {
+    const recipe = await Recipe.findById(req.params.id);
+    res.render("recipes/edit.ejs", {
+      recipe: recipe,
+    });
+  } catch (error) {
+    console.log(error);
+    res.redirect("/recipes");
+  }
+});
+
+router.put("/:id", async (req, res) => {
+  try {
+    const recipe = await Recipe.findById(req.params.id);
+    if (recipe.owner.equals(req.session.user._id)) {
+      await recipe.updateOne(req.body);
+    }
+    res.redirect("/recipes/" + recipe._id);
+  } catch (error) {
+    console.log(error);
+    res.redirect("/recipes");
+  }
+});
+
 router.delete("/:id", async (req, res) => {
   try {
     const recipe = await Recipe.findById(req.params.id);
